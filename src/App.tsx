@@ -5,9 +5,7 @@ import MainEditor from './components/MainEditor'
 import type { Note } from './types'
 import { HelpCenter, CloudBackup } from './components/Modals'
 import { storageService } from './services/storage'
-import { authService } from './services/auth'
 import { backupService } from './services/backup'
-import type { User } from 'firebase/auth'
 import './App.css'
 
 function App() {
@@ -16,14 +14,6 @@ function App() {
   const [showHelp, setShowHelp] = useState(false);
   const [showBackup, setShowBackup] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [user, setUser] = useState<User | null>(null);
-
-  // Auth Listener
-  useEffect(() => {
-    return authService.onAuthChange((user) => {
-      setUser(user);
-    });
-  }, []);
 
   // Load notes on mount
   useEffect(() => {
@@ -101,9 +91,8 @@ function App() {
   };
 
   const handleBackup = async () => {
-    if (!user) return;
     try {
-      const response = await backupService.backupToS3(user.uid, notes);
+      const response = await backupService.backupToS3('anonymous', notes);
       alert(`Backup successful! ID: ${response.backupId}`);
     } catch (e) {
       alert('Backup failed. See console for details.');
@@ -138,6 +127,7 @@ function App() {
           onAddNote={handleAddNote}
           onDeleteNote={handleDeleteNote}
           onQuickNote={() => setActiveNoteId('quick-note')}
+          onOpenFullPage={() => window.open(chrome.runtime.getURL('index.html'))}
         />
         <div className="editor-area">
           {activeNote && (
@@ -175,11 +165,6 @@ function App() {
             </div>
             <div className="modal-body">
               <CloudBackup
-                user={user}
-                onLoginGoogle={authService.signInWithGoogle}
-                onLoginGithub={authService.signInWithGithub}
-                onLoginMicrosoft={authService.signInWithMicrosoft}
-                onLogout={authService.logout}
                 onBackup={handleBackup}
                 onRestore={handleRestore}
               />

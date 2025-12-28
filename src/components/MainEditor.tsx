@@ -6,7 +6,7 @@ import TextAlign from '@tiptap/extension-text-align';
 import {
     Bold, Italic, Underline as UnderlineIcon, Strikethrough,
     AlignLeft, AlignCenter, List,
-    Type, HelpCircle, CloudUpload
+    Type, HelpCircle, CloudUpload, Eraser
 } from 'lucide-react';
 
 interface MainEditorProps {
@@ -68,6 +68,9 @@ const MainEditor: React.FC<MainEditorProps> = ({ content, onChange, onShowHelp, 
                 <div className="toolbar-group">
                     <button onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()} className={editor.isActive('heading', { level: 1 }) ? 'active' : ''}>
                         <Type size={18} />
+                    </button>
+                    <button onClick={() => editor.chain().focus().unsetAllMarks().clearNodes().run()} title="Clear Formatting">
+                        <Eraser size={18} />
                     </button>
                 </div>
                 <div className="toolbar-right">

@@ -8,12 +8,21 @@ interface SidebarProps {
     onAddNote: () => void;
     onDeleteNote: (id: string) => void;
     onQuickNote: () => void;
+    onOpenFullPage: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ notes, activeNoteId, onSelectNote, onAddNote, onDeleteNote, onQuickNote }) => {
+const Sidebar: React.FC<SidebarProps> = ({
+    notes, activeNoteId, onSelectNote, onAddNote, onDeleteNote, onQuickNote, onOpenFullPage
+}) => {
     return (
         <div className="sidebar">
             <div className="sidebar-header">
+                <button className="open-full-btn" onClick={onOpenFullPage} title="Open in Full Tab">
+                    ↗
+                </button>
+                <button className="add-note-btn" onClick={onAddNote}>
+                    <Plus size={18} /> Add a Note
+                </button>
                 <button className="quick-note-btn" onClick={onQuickNote}>
                     QUICK NOTE
                 </button>

@@ -1,5 +1,4 @@
 import React from 'react';
-import type { User } from 'firebase/auth';
 
 export const HelpCenter: React.FC = () => {
     return (
@@ -25,57 +24,35 @@ export const HelpCenter: React.FC = () => {
 };
 
 interface CloudBackupProps {
-    user: User | null;
-    onLoginGoogle: () => void;
-    onLoginGithub: () => void;
-    onLoginMicrosoft: () => void;
-    onLogout: () => void;
     onBackup: () => void;
     onRestore: (id: string) => void;
 }
 
 export const CloudBackup: React.FC<CloudBackupProps> = ({
-    user, onLoginGoogle, onLoginGithub, onLoginMicrosoft, onLogout, onBackup, onRestore
+    onBackup, onRestore
 }) => {
     const [backupId, setBackupId] = React.useState('');
 
     return (
         <div className="cloud-backup">
-            {!user ? (
-                <div className="auth-section">
-                    <h3>Sign in to enable Cloud Backup</h3>
-                    <div className="auth-buttons">
-                        <button className="login-btn google" onClick={onLoginGoogle}>Sign in with Google</button>
-                        <button className="login-btn github" onClick={onLoginGithub}>Sign in with GitHub</button>
-                        <button className="login-btn microsoft" onClick={onLoginMicrosoft}>Sign in with Outlook</button>
-                    </div>
+            <div className="backup-row">
+                <div className="backup-col">
+                    <h3>BACKUP</h3>
+                    <p>Last Backup: <strong>Never</strong></p>
+                    <p>Backup ID: <strong>Backup the data first</strong></p>
+                    <button className="backup-btn" onClick={onBackup}>BACKUP ALL DATA</button>
                 </div>
-            ) : (
-                <>
-                    <div className="user-profile">
-                        <span>Signed in as <strong>{user.email || user.displayName}</strong></span>
-                        <button className="logout-btn" onClick={onLogout}>Sign Out</button>
-                    </div>
-                    <div className="backup-row">
-                        <div className="backup-col">
-                            <h3>BACKUP</h3>
-                            <p>Last Backup: <strong>Never</strong></p>
-                            <p>Backup ID: <strong>Backup the data first</strong></p>
-                            <button className="backup-btn" onClick={onBackup}>BACKUP ALL DATA</button>
-                        </div>
-                        <div className="backup-col">
-                            <h3>RESTORE</h3>
-                            <input
-                                type="text"
-                                placeholder="Put your Backup ID here"
-                                value={backupId}
-                                onChange={(e) => setBackupId(e.target.value)}
-                            />
-                            <button className="recover-btn" onClick={() => onRestore(backupId)}>RECOVER</button>
-                        </div>
-                    </div>
-                </>
-            )}
+                <div className="backup-col">
+                    <h3>RESTORE</h3>
+                    <input
+                        type="text"
+                        placeholder="Put your Backup ID here"
+                        value={backupId}
+                        onChange={(e) => setBackupId(e.target.value)}
+                    />
+                    <button className="recover-btn" onClick={() => onRestore(backupId)}>RECOVER</button>
+                </div>
+            </div>
             <div className="backup-footer">
                 <span>Powered by AWS S3</span>
             </div>
